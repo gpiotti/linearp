@@ -1,0 +1,5 @@
+HERO = {HERO1, HERO2};
+SPOT = {SPOT1, SPOT2};
+
+damage = [|1,2
+          |2,3|];

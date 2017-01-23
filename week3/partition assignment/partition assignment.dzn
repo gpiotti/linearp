@@ -1,0 +1,10 @@
+PRISONER = {PRISONER1, PRISONER2}; % domain
+
+n = 2;
+m = 2;
+% codomain ROW x COL (cell blocks)
+cost = [|1,1
+        |2,2|];
+        
+danger = {PRISONER1};
+female = {PRISONER2};
