@@ -21,18 +21,9 @@ constraint forall (s in SOLDIER, d in 1..nDays-2)
 % no EVE shift followed by NIGHT shift
 constraint forall (s in SOLDIER, d in 1..nDays-2)
                   (roster[s, d] = EVE -> roster[s, d+1] != NIGHT);  
-
-% minimum soldiers in NIGHT shift by day
-%constraint forall (d in DAY)
-%                  (sum (s in SOLDIER) (roster[s, d] = NIGHT) = o);
                  
 % between l and u soldiers in EVE shift by day - this is for performance
 array[DAY] of var l..u: onEve;
-%constraint onEve = [sum(s in SOLDIER) (roster[s, d] = EVE) | d in DAY ]; 
-%constraint forall (d in DAY)
-%                 (sum (s in SOLDIER) (roster[s, d] = EVE) >= l);
-%constraint forall (d in DAY )
-%                  (sum (s in SOLDIER) (roster[s, d] = EVE) <= u);
                   
 %this constraint reemplaza las constraint que limitan la cantidad de shifts x dia (l, u y o)
 constraint forall(d in DAY) (global_cardinality([roster[s, d] | s in SOLDIER], [NIGHT, EVE], [o, onEve[d]]));
