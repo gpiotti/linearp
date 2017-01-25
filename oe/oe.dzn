@@ -1,0 +1,21 @@
+maxtime = 8;
+%numShifts = 2;
+%numTeachers = 3;
+
+%TEACHER = 1..numTeachers;
+%SHIFT = 1..numShifts;
+shiftDuration = [2,2];
+% teacher1 -> 01 to 04 
+% teacher2 -> 05 to 08 
+% teacher3 -> 03 to 05
+calendar = [| true, true, true, true, true, false, false, false,
+            | false, false, false, false, true, true, true, true,
+            | false, false, true, true, true, true, false, false |];
+
+minNeeded = [|0, 0, 2, 0, 0, 0, 0, 0,
+             |0, 0, 0, 0, 0, 0, 0, 0 |];
+             
+maxNeeded =  array2d(SHIFT,1..8, []) ;
+
+shiftName = ["regular","monitor"];
+teacherName = ["teacher1","teacher2","teacher3"];
