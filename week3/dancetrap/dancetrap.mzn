@@ -36,11 +36,17 @@ constraint regular(legs, 7, 6, legs_transitions, 1, {7});
 array[1..7, LEGS] of 0..7: legs_transitions = [| 2,0,4,5,6,7,
                                                | 0,0,0,5,6,7,
                                                | 2,0,4,0,0,7,
-                                               | 0,0,4,0,0,0,
-                                               | 2,0,0,0,0,0,
+                                               | 2,0,4,0,0,7,
+                                               | 2,0,4,0,0,0,
                                                | 0,3,0,0,0,0,
-                                               | 2,0,4,5,6,7|];
-constraint forall(s in 1..length(legs)-2) ( legs[s] = waltz /\ legs[s+1] = waltz -> legs[s+2] != waltz);
+                                               | 2,0,4,0,0,7|];
+constraint forall(s in 1..maxlen-3) ( legs[s] = waltz /\ legs[s+1] = waltz /\ legs[s+2] = waltz -> legs[s+3] != waltz);
+constraint forall (i in 1..maxlen) ((legs[i] = waltz -> forall(j in i+1..len) (legs[j] = curtsey -> exists(k in i+1..j-1) (legs[k] = stand))));
+constraint forall(i in 1..maxlen-1) (legs[i] = curtsey -> legs[i+1] != prep);
+
+constraint forall(s in 1..maxlen) (s > len -> legs[s] = stand);
+constraint forall(s in 1..maxlen) (s > len -> arms[s] = neutral);
+constraint forall(s in 1..maxlen) (s > len -> face[s] = blank);
                                                
 constraint regular(arms, 6, 5, arms_transitions, 1, {6});
 array[1..6, ARMS] of 0..6: arms_transitions = [| 0,3,4,5,6,
@@ -59,8 +65,7 @@ array[1..7, FACE] of 0..7: face_transitions = [| 2,3,4,5,6,7,
                                                | 2,3,4,5,0,7,
                                                | 2,3,4,5,6,7|];                 
 var int: obj;
-constraint obj =sum(i in  1..len) (dance_value[legs[i],arms[i]])
-              + sum(i in  1..len) (entice_value[arms[i], face[i]])
+constraint obj =sum(i in  1..maxlen) (dance_value[legs[i],arms[i]] + entice_value[arms[i], face[i]])
              - (boredom * len);
 
 
