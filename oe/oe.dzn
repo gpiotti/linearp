@@ -1,5 +1,6 @@
 maxTime = 8;
-numTeachers = 6;
+numTeachers = 20;
+
 
 %numTeachers = 3;
 %SHIFT = 1..numShifts;
@@ -20,7 +21,7 @@ calendar = array2d(TEACHERs, TIME, [ bernoulli(i mod 2) | i in 1..(card(TEACHERs
 %             |2, 2, 2, 2, 2, 2, 2, 2,
 %             |6, 6, 6, 6, 6, 6, 6, 6 |];
            
-minNeeded = array2d(SHIFTs, TIME, [ i| i in 1..(card(SHIFTs)*card(TIME)) ]);             
+minNeeded = array2d(SHIFTs, TIME, [ 1 | i in 1..(card(SHIFTs)*maxTime) ]);             
 
 shiftName = ["regular","monitor","off"];
 
