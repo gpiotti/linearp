@@ -1,21 +1,27 @@
-maxtime = 8;
-%numShifts = 2;
-%numTeachers = 3;
+maxTime = 8;
+numTeachers = 6;
 
-%TEACHER = 1..numTeachers;
+%numTeachers = 3;
 %SHIFT = 1..numShifts;
-shiftDuration = [2,2];
+shiftDuration = [2,1,0];
+shiftValue = [1,1,0];
 % teacher1 -> 01 to 04 
 % teacher2 -> 05 to 08 
 % teacher3 -> 03 to 05
-calendar = [| true, true, true, true, true, false, false, false,
-            | false, false, false, false, true, true, true, true,
-            | false, false, true, true, true, true, false, false |];
+%calendar = [| true, true, true, true, true, false, false, false,
+%            | false, false, false, false, true, true, true, true,
+%            | false, false, true, true, true, true, false, false |];
 
-minNeeded = [|0, 0, 2, 0, 0, 0, 0, 0,
-             |0, 0, 0, 0, 0, 0, 0, 0 |];
-             
-maxNeeded =  array2d(SHIFT,1..8, []) ;
 
-shiftName = ["regular","monitor"];
-teacherName = ["teacher1","teacher2","teacher3"];
+
+calendar = array2d(TEACHERs, TIME, [ bernoulli(i mod 2) | i in 1..(card(TEACHERs)*card(TIME)) ]);
+
+%minNeeded = [|2, 2, 2, 2, 2, 2, 2, 2,
+%             |2, 2, 2, 2, 2, 2, 2, 2,
+%             |6, 6, 6, 6, 6, 6, 6, 6 |];
+           
+minNeeded = array2d(SHIFTs, TIME, [ i| i in 1..(card(SHIFTs)*card(TIME)) ]);             
+
+shiftName = ["regular","monitor","off"];
+
+teacherName = array1d(TEACHERs, [ "teacher"++show(i)  | i in 1..numTeachers]);
