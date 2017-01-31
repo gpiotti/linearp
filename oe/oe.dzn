@@ -1,5 +1,5 @@
-maxTime = 8;
-numTeachers = 20;
+maxTime = 96;
+numTeachers = 500;
 
 
 %numTeachers = 3;
