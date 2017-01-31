@@ -25,8 +25,8 @@ constraint forall(h in TIME) ( global_cardinality_low_up([roster[t, h] | t in TE
 
 
 %non overlap
-%constraint forall (t in TEACHERs, h in 2..length(TIME)) (roster[t, h] != off 
-%-> h+1 >= h + shiftDuration[roster[t, h-1]] );
+constraint forall (t in TEACHERs, h in 2..length(TIME)) (roster[t, h] != off 
+-> h+1 >= h + shiftDuration[roster[t, h-1]] );
 
 %no more than 2 shifts in a row
 constraint forall (t in TEACHERs, h in 1..length(TIME)-2) (roster[t, h] != off /\ roster[t, h+1] != off -> roster[t, h+2] = off);
@@ -38,6 +38,6 @@ constraint obj = sum([shiftValue[roster[t,h]] | t in TEACHERs, h in TIME]);
 solve maximize obj ;
 
 
-%output ["TIME \t"] ++ ["\(TIME[i]) \t" | i in TIME] ++ ["\n"]  ++
-%      [ if j==1 then teacherName[i] ++ "\t" else "" endif  ++ shiftName[fix(roster[i,j])] ++  if j==maxTime then "\n" else "\t" endif
-%       | i in TEACHERs, j in TIME ]++ ["\nobj: \(obj) \nnumTeachers: \(numTeachers) \nteacherName:\(teacherName) \ncard TEACHERs:\(card(TEACHERs)) "];
+output ["TIME \t"] ++ ["\(TIME[i]) \t" | i in TIME] ++ ["\n"]  ++
+      [ if j==1 then teacherName[i] ++ "\t" else "" endif  ++ shiftName[fix(roster[i,j])] ++  if j==maxTime then "\n" else "\t" endif
+       | i in TEACHERs, j in TIME ]++ ["\nobj: \(obj) \nnumTeachers: \(numTeachers) \nteacherName:\(teacherName) \ncard TEACHERs:\(card(TEACHERs)) "];
