@@ -1,4 +1,5 @@
 include "global_cardinality_low_up.mzn";
+include "global_cardinality.mzn";
 %teachers
 int: numTeachers;
 set of int: TEACHERs = 1..numTeachers; 
@@ -6,12 +7,17 @@ array[TEACHERs] of string: teacherName;
 %time
 int: maxTime;
 set of int: TIME = 1..maxTime;
+array[TIME] of int: inDayOfYear;
+array[1..365] of int: dayOfYear;
+
+array[TIME] of int: inWeekOfYear;
+array[1..52] of int: weekOfYear;
 %shifts
 enum SHIFT = {regular, monitor, off};
 set of int: SHIFTs = 1..card(SHIFT);
 array[SHIFT] of string: shiftName;
 
-array[TEACHERs, TIME] of bool: calendar;
+%array[TEACHERs, TIME] of bool: calendar;
 array[SHIFTs, TIME] of int: minNeeded;
 
 array[SHIFT] of int: shiftDuration;
@@ -20,7 +26,7 @@ array[SHIFT] of int: shiftValue;
 array[TEACHERs, TIME] of var SHIFT: roster;
 
 
-%the 4 constraint below are for the min_needed quantity
+% min_needed quantity
 constraint forall(h in TIME) ( global_cardinality_low_up([roster[t, h] | t in TEACHERs], [regular, monitor] , [minNeeded[regular,h], minNeeded[monitor,h]],  [numTeachers, numTeachers] ) );
 
 
@@ -31,9 +37,12 @@ constraint forall (t in TEACHERs, h in 2..length(TIME)) (roster[t, h] != off
 %no more than 2 shifts in a row
 constraint forall (t in TEACHERs, h in 1..length(TIME)-2) (roster[t, h] != off /\ roster[t, h+1] != off -> roster[t, h+2] = off);
 
+constraint forall(t in TEACHERs, h in dayOfYear) (sum([shiftDuration[roster[t, i]] | i in TIME where inDayOfYear[i] = h])  <= 8 );
+constraint forall(t in TEACHERs, h in weekOfYear) (sum([shiftDuration[roster[t, i]] | i in TIME where inWeekOfYear[i] = h])  <= 26 );
 
 var int: obj;
 constraint obj = sum([shiftValue[roster[t,h]] | t in TEACHERs, h in TIME]);
+constraint obj >= 0;
 
 solve maximize obj ;
 
