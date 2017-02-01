@@ -5,7 +5,7 @@ numTeachers = 500;
 %numTeachers = 3;
 %SHIFT = 1..numShifts;
 shiftDuration = [2,1,0];
-shiftValue = [1,1,0];
+shiftValue = [2,1,0];
 % teacher1 -> 01 to 04 
 % teacher2 -> 05 to 08 
 % teacher3 -> 03 to 05
