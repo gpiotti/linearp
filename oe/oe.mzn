@@ -46,22 +46,20 @@ constraint forall (t in TEACHERs, h in 1..length(TIME)-2) (roster[t, h] in {regu
 %                                                 | 2, 3, 4 |];
                                                 
 
-%calendar availability
-%constraint forall (t in TEACHERs, h in TIME) (roster[t, h] != off -> calendar[t, h] = true);
+
 
 %max hours by day/week
 constraint forall(t in TEACHERs, h in dayOfYear) (sum([shiftDuration[roster[t, i]] | i in TIME where inDayOfYear[i] = h])  <= 8 );
 constraint forall(t in TEACHERs, h in weekOfYear) (sum([shiftDuration[roster[t, i]] | i in TIME where inWeekOfYear[i] = h])  <= 26 );
 
+%calendar availability
 constraint forall(t in TEACHERs, h in TIME) (calendar[t,h] = false -> roster[t,h] = off);
-constraint forall(t in TEACHERs, h in TIME, s in SHIFTs) (teacherCanDoShift[t, s] = false -> roster[t,h] = off);
+%skills
+constraint forall(t in TEACHERs, h in TIME, s in SHIFTs) (teacherCanDoShift[t, s] = false -> roster[t,h] != s );
 
-%constraint forall (t in TEACHERs, h in TIME) (roster[t, h] in {regular,monitor}  -> calendar[t, h] = true);
 
-%skills constraint
-%constraint forall (t in TEACHERs) (roster[t, h] != off -> teacherCanDoShift[t, roster[t,h]] = true );
 
-%
+
 var int: obj;
 constraint obj = sum([shiftValue[roster[t,h]] | t in TEACHERs, h in TIME]);
 constraint obj >= 0;
