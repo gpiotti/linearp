@@ -33,11 +33,11 @@ constraint forall(h in TIME) ( global_cardinality_low_up([roster[t, h] | t in TE
 
 
 %non overlap
-constraint forall (t in TEACHERs, h in 2..length(TIME)) (roster[t, h] != off 
+constraint forall (t in TEACHERs, h in 2..length(TIME)) (roster[t, h] in {regular,monitor} 
 -> h+1 >= h + shiftDuration[roster[t, h-1]] );
 
 %no more than 2 shifts in a row
-constraint forall (t in TEACHERs, h in 1..length(TIME)-2) (roster[t, h] != off /\ roster[t, h+1] != off -> roster[t, h+2] = off);
+constraint forall (t in TEACHERs, h in 1..length(TIME)-2) (roster[t, h] in {regular,monitor} /\ roster[t, h+1] in {regular,monitor} -> roster[t, h+2] = off);
 
 %constraint forall(t in TEACHERs) (regular([roster[t, h] | h in TIME ], 4, 3, transition_array, 1, {2,3,4}));
 %array[1..4, SHIFTs] of 0..4: transition_array = [| 2, 3, 4, 
@@ -53,12 +53,17 @@ constraint forall (t in TEACHERs, h in 1..length(TIME)-2) (roster[t, h] != off /
 constraint forall(t in TEACHERs, h in dayOfYear) (sum([shiftDuration[roster[t, i]] | i in TIME where inDayOfYear[i] = h])  <= 8 );
 constraint forall(t in TEACHERs, h in weekOfYear) (sum([shiftDuration[roster[t, i]] | i in TIME where inWeekOfYear[i] = h])  <= 26 );
 
+constraint forall(t in TEACHERs, h in TIME) (calendar[t,h] = false -> roster[t,h] = off);
+constraint forall(t in TEACHERs, h in TIME) (teacherCanDoShift[t, roster[t,h]] = false -> roster[t,h] = off);
+
+%constraint forall (t in TEACHERs, h in TIME) (roster[t, h] in {regular,monitor}  -> calendar[t, h] = true);
+
 %skills constraint
 %constraint forall (t in TEACHERs) (roster[t, h] != off -> teacherCanDoShift[t, roster[t,h]] = true );
 
-
+%
 var int: obj;
-constraint obj = sum([shiftValue[roster[t,h]] * bool2int(teacherCanDoShift[t, roster[t,h]]) * bool2int(calendar[t, h]) | t in TEACHERs, h in TIME]);
+constraint obj = sum([shiftValue[roster[t,h]] | t in TEACHERs, h in TIME]);
 constraint obj >= 0;
 
 solve maximize obj;
