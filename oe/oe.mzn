@@ -54,7 +54,7 @@ constraint forall(t in TEACHERs, h in dayOfYear) (sum([shiftDuration[roster[t, i
 constraint forall(t in TEACHERs, h in weekOfYear) (sum([shiftDuration[roster[t, i]] | i in TIME where inWeekOfYear[i] = h])  <= 26 );
 
 constraint forall(t in TEACHERs, h in TIME) (calendar[t,h] = false -> roster[t,h] = off);
-constraint forall(t in TEACHERs, h in TIME) (teacherCanDoShift[t, roster[t,h]] = false -> roster[t,h] = off);
+constraint forall(t in TEACHERs, h in TIME, s in SHIFTs) (teacherCanDoShift[t, s] = false -> roster[t,h] = off);
 
 %constraint forall (t in TEACHERs, h in TIME) (roster[t, h] in {regular,monitor}  -> calendar[t, h] = true);
 
