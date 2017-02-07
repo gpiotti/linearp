@@ -22,6 +22,7 @@ array[TEACHERs, 1..length(SHIFTs)] of bool: teacherCanDoShift;
 
 array[TEACHERs, TIME] of bool: calendar;
 array[SHIFTs, TIME] of int: minNeeded;
+array[SHIFTs, TIME] of int: availability;
 
 array[SHIFT] of int: shiftDuration;
 array[SHIFT] of int: shiftValue;
@@ -60,7 +61,7 @@ constraint forall(t in TEACHERs, h in TIME, s in SHIFTs) (teacherCanDoShift[t, s
 
 
 var int: obj;
-constraint obj = sum([ shiftValue[roster[t,h]] | t in TEACHERs, h in TIME ]);
+constraint obj = sum([ (shiftValue[roster[t,h]] - availability[roster[t,h],h] ) | t in TEACHERs, h in TIME ]);
 
 
 

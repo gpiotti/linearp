@@ -3,8 +3,8 @@ import math
 myfile = open('datagen.dzn', 'w')
 WEEKSINYEAR = 52
 DAYSINYEAR = 365
-NUMTEACHERS = 9
-MAXTIME = 4
+NUMTEACHERS = 500
+MAXTIME = 336
 
 TIME_WITHIN_DAY = 48
 TIME_WITHIN_WEEK = 336
@@ -17,140 +17,134 @@ myfile.write("maxTime = %s;\n" % MAXTIME)
 myfile.write("shiftDuration = [2,2,2,0];\n")
 myfile.write("shiftValue = [1,1,1,0];\n")
 myfile.write("numTeachers = %s;\n" % NUMTEACHERS)
-myfile.write('shiftName = ["Intermediate","TBP","Monitor","off"];\n')
+myfile.write('shiftName = ["INT","TBP","MON","off"];\n')
 
+def writeList (list, startString, endString):
+    temp = []
+    myfile.write("%s" % startString)
+    for x in list:
+        temp.append((",".join(x)))
+    myfile.write(",".join(temp))
+    myfile.write("%s\n" % endString  )
+
+     
 
 #calendar
-thelist = []
+calendar=[]
 
-for x in range (0, NUMTEACHERS):
-    for y in range(0, MAXTIME):
+for t in range (0, NUMTEACHERS):
+    calendar.append([t])
+    calendar[t] = []
+    for h in range(0, MAXTIME):
         i = randint(0,1)
         if i == 0:
-            thelist.append("false")
+            calendar[t].append("false")
         else:
-            thelist.append("true")
-
+            calendar[t].append("true")
 myfile.write("calendar = array2d(TEACHERs, TIME, [")
-for item in range(0, len(thelist)):
-    if item != len(thelist)-1:
-        myfile.write("%s, " %  thelist[item]) 
-    else:
-        myfile.write("%s ]);\n" % thelist[item])
+
+temp = []
+
+writeList(calendar, "", "]);")
 
 #teacherName
-thelist = []
+teacherName = []
 
-for x in range (1, NUMTEACHERS+1):
-   thelist.append("teacher%s" % x)
-
-myfile.write("teacherName = [")
-for item in range(0, len(thelist)):
-    if item != len(thelist)-1:
-        myfile.write("\"%s\", " % thelist[item])
-    else:
-        myfile.write("\"%s\" ];\n" % thelist[item])
-
-
-
+for t in range (0, NUMTEACHERS):
+    teacherName.append([t])
+    teacherName[t] = []
+    teacherName[t].append("\"teacher%s\"" % t)
+    
+writeList(teacherName, "teacherName = [", "];")
+     
 
 #inDayOfYear
-thelist = []
+inDayOfYear = []
 
 for x in range (1, MAXTIME):
-    if len(thelist) >= MAXTIME:
+    if len(inDayOfYear) >= MAXTIME:
            break
     for y in range(1, TIME_WITHIN_DAY+1):
-       thelist.append(x)
-       if len(thelist) >= MAXTIME:
+       inDayOfYear.append(x)
+       if len(inDayOfYear) >= MAXTIME:
            break
 
 myfile.write("inDayOfYear = [")
-for item in range(0, len(thelist)):
-    if item != len(thelist)-1:
-        myfile.write("%s, " % thelist[item])
+for item in range(0, len(inDayOfYear)):
+    if item != len(inDayOfYear)-1:
+        myfile.write("%s, " % inDayOfYear[item])
     else:
-        myfile.write("%s ];\n" % thelist[item])
+        myfile.write("%s ];\n" % inDayOfYear[item])
 
 #dayOfYear
-i = max(thelist) #takes max value from inDayOfYear
-thelist = []
+i = max(inDayOfYear) #takes max value from inDayOfYear
+dayOfYear = []
 
 for x in range (0, i+1):
-    thelist.append(x)
+    dayOfYear.append(x)
 
 myfile.write("dayOfYear = [")
-for item in range(1, len(thelist)):
-    if item != len(thelist)-1:
-        myfile.write("%s, " % thelist[item])
+for item in range(1, len(dayOfYear)):
+    if item != len(dayOfYear)-1:
+        myfile.write("%s, " % dayOfYear[item])
     else:
-        myfile.write("%s ];\n" % thelist[item])
+        myfile.write("%s ];\n" % dayOfYear[item])
 
 #inWeekOfYear
-thelist = []
+inWeekOfYear = []
 for x in range (1, MAXTIME):
-    if len(thelist) >= MAXTIME:
+    if len(inWeekOfYear) >= MAXTIME:
            break
     for y in range(1, TIME_WITHIN_WEEK+1):
-       thelist.append(x)
-       if len(thelist) >= MAXTIME:
+       inWeekOfYear.append(x)
+       if len(inWeekOfYear) >= MAXTIME:
            break
 
 myfile.write("inWeekOfYear = [")
-for item in range(0, len(thelist)):
-    if item != len(thelist)-1:
-        myfile.write("%s, " % thelist[item])
+for item in range(0, len(inWeekOfYear)):
+    if item != len(inWeekOfYear)-1:
+        myfile.write("%s, " % inWeekOfYear[item])
     else:
-        myfile.write("%s ];\n" % thelist[item])
+        myfile.write("%s ];\n" % inWeekOfYear[item])
 
 #weekOfYear
-i = max(thelist) #takes max value from inWeekOfYear
-thelist = []
+i = max(inWeekOfYear) #takes max value from inWeekOfYear
+weekOfYear = []
 
 for x in range (0, i+1):
-    thelist.append(x)
+    weekOfYear.append(x)
 
 myfile.write("weekOfYear = [")
-for item in range(1, len(thelist)):
-    if item != len(thelist)-1:
-        myfile.write("%s, " % thelist[item])
+for item in range(1, len(weekOfYear)):
+    if item != len(weekOfYear)-1:
+        myfile.write("%s, " % weekOfYear[item])
     else:
-        myfile.write("%s ];\n" % thelist[item])
+        myfile.write("%s ];\n" % weekOfYear[item])
         
 
 #teacherCanDoShift
-thelist = []
+teacherCanDoShift = []
 
-for x in range (0, NUMTEACHERS):
-    for y in range(0, NUMOFSHIFTS):
-        if y == NUMOFSHIFTS-1:
+for t in range (0, NUMTEACHERS):
+    teacherCanDoShift.append([t])
+    teacherCanDoShift[t] = []
+    for s in range(0, NUMOFSHIFTS):
+        if s == NUMOFSHIFTS-1:
             i = 1
         else:
             i = randint(0,1)
         if i == 1:
-            thelist.append("true")
+            teacherCanDoShift[t].append("true")
         else:
-            thelist.append("false")
+            teacherCanDoShift[t].append("false")
             
- 
-
-myfile.write("teacherCanDoShift = array2d(TEACHERs, 1..length(SHIFTs), [")
-for item in range(0, len(thelist)):
-    if item != len(thelist)-1:
-        myfile.write("%s, " %  thelist[item]) 
-    else:
-        myfile.write("%s ]);\n" % thelist[item])
+writeList(teacherCanDoShift,
+          "teacherCanDoShift = array2d(TEACHERs, 1..length(SHIFTs), [",
+          "]);")
 
 
 #minNeeded
-thelist = []
-
-for x in range (1, NUMOFSHIFTS+1):
-    for y in range(1, MAXTIME+1):
-        if x == NUMOFSHIFTS:
-            thelist.append(0)
-        else:
-            thelist.append(1)
+minNeeded = []
 
 myfile.write("minNeeded = array2d(SHIFTs, TIME, [")
 #for item in range(0, len(thelist)):
@@ -162,14 +156,31 @@ temp = """2,2,3,2,2,2,3,2,2,2,3,2,4,7,5,3,6,11,7,6,7,12,13,7,7,13,12,4,10,17,15,
 """
 #remember that the corresponding off minNeeded are ignored by the global_card constraint
 temp = temp.split(",")
-#temp2 = ",".join(temp)
 
 myfile.write(",".join(temp[0:MAXTIME*NUMOFSHIFTS]))
-#myfile.write("""2,2,3,2,2,2,3,2,2,2,3,2,0,0,0,0
-#""")
 myfile.write ("]);\n")
 
+#availability
+availability = []
+for s in range (0, NUMOFSHIFTS): #exclude the off shift
+    availability.append([s])
+    availability[s] = []
+    for h in range(0, MAXTIME):
+        availability[s].append([h])
+        i = 0
+        for t in range(0, NUMTEACHERS):
+           #print "shift= " + str(s) + " hour= " + str(h) + " teacher " + str(t) + " " + str(calendar[t][h]) \
+           # + " tCDS= " + str(teacherCanDoShift[t][s]) \
+           # + " result= " + str(calendar[t][h] == "true" and teacherCanDoShift[t][s] == "true")
+           if calendar[t][h] == "true" and teacherCanDoShift[t][s] == "true":
+               i = i+ 1
+        if s != NUMOFSHIFTS-1:
+            availability[s][h]= str(i)
+        else:
+            availability[s][h] = str(NUMTEACHERS)
 
-        
+writeList(availability, "availability = array2d(1..length(SHIFTs), TIME, [", "]);")
+
+
 myfile.close()
 
