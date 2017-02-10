@@ -1,10 +1,13 @@
-from random import randint
+from random import randint, randrange
 import math
 myfile = open('datagen.dzn', 'w')
 WEEKSINYEAR = 52
 DAYSINYEAR = 365
 NUMTEACHERS = 20
-MAXTIME = 48
+MAXTIME = 128
+
+def getRandomBoolean(percent=80):
+    return randrange(100) < percent
 
 TIME_WITHIN_DAY = 48
 TIME_WITHIN_WEEK = 336
@@ -36,10 +39,10 @@ for t in range (0, NUMTEACHERS):
     calendar.append([t])
     calendar[t] = []
     for h in range(0, MAXTIME):
-        i = randint(0,1)
+        i = getRandomBoolean()
         if i == 0:
-            calendar[t].append("true")
-            #calendar[t].append("false")
+            #calendar[t].append("true")
+            calendar[t].append("false")
         else:
             calendar[t].append("true")
 myfile.write("calendar = array2d(TEACHERs, TIME, [")
@@ -133,12 +136,12 @@ for t in range (0, NUMTEACHERS):
         if s == NUMOFSHIFTS-1:
             i = 1
         else:
-            i = randint(0,1)
+            i = getRandomBoolean()
         if i == 1:
             teacherCanDoShift[t].append("true")
         else:
-            teacherCanDoShift[t].append("true")
-            #teacherCanDoShift[t].append("false")
+            #teacherCanDoShift[t].append("true")
+            teacherCanDoShift[t].append("false")
             
 writeList(teacherCanDoShift,
           "teacherCanDoShift = array2d(TEACHERs, 1..length(SHIFTs), [",
@@ -174,6 +177,29 @@ for s in range (0, NUMOFSHIFTS):
             availability[s][h] = str(NUMTEACHERS*2) #the off shift has always max availability
 
 writeList(availability, "availability = array2d(1..length(SHIFTs), TIME, [", "]);")
+
+
+#lowerBound
+##loweBound=[]
+##
+##for t in range (0, NUMTEACHERS):
+##    calendar.append([t])
+##    calendar[t] = []
+##    for h in range(0, MAXTIME):
+##        i = randint(0,1)
+##        if i == 0:
+##            calendar[t].append("true")
+##            #calendar[t].append("false")
+##        else:
+##            calendar[t].append("true")
+##myfile.write("calendar = array2d(TEACHERs, TIME, [")
+##
+##temp = []
+##
+##writeList(calendar, "", "]);")
+##
+##array[1..3, TIME] of int: l = array2d(1..3, TIME, [1,0,0,0, 0,0,0,0, 0,0,0,0]);
+##array[1..3, TIME] of int: u = array2d(1..3, TIME, [2,0,0,0, 0,0,0,0, 0,0,0,0]);
 
 
 myfile.close()
