@@ -1,13 +1,15 @@
 from random import randint, randrange
+
 import math
 myfile = open('datagen.dzn', 'w')
 WEEKSINYEAR = 52
 DAYSINYEAR = 365
-NUMTEACHERS = 20
-MAXTIME = 128
+NUMTEACHERS = 50
+MAXTIME = 336
+PERC_AVAILABILITY= 80
 
-def getRandomBoolean(percent=80):
-    return randrange(100) < percent
+def getRandomBoolean():
+    return randrange(100) < PERC_AVAILABILITY
 
 TIME_WITHIN_DAY = 48
 TIME_WITHIN_WEEK = 336
