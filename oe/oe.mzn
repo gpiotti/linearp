@@ -1,9 +1,9 @@
 include "global_cardinality_low_up.mzn";
-include "global_cardinality.mzn";
-include "regular.mzn";
+%include "global_cardinality.mzn";
+%include "regular.mzn";
 include "sliding_sum.mzn";
-include "disjunctive.mzn";
-include "count.mzn";
+%include "disjunctive.mzn";
+
 
 % teachers
 int: numTeachers;
@@ -51,24 +51,29 @@ constraint forall(h in TIME) ( global_cardinality_low_up([roster[t, h] | t in TE
 %constraint forall (t in TEACHERs, h in 2..length(TIME)) (roster[t, h] in {intermediate, tbp, monitor} 
 %->  h+1  >= h + shiftDuration[roster[t, h-1]]);
 
-constraint forall (t in TEACHERs, h in 1..length(TIME)) (roster[t, h] != off
--> not exists(k in h+1..length(TIME) ) ( k < h + shiftDuration[roster[t,h]] /\ roster[t,k] != off ));
+%constraint forall (t in TEACHERs, h in 1..length(TIME)) (roster[t, h] != off
+%-> not exists(k in h+1..length(TIME) ) ( k < h + shiftDuration[roster[t,h]] /\ roster[t,k] != off ));
 
+%constraint  forall (t in TEACHERs, h in 1..length(TIME)-4)  ( roster[t, h] != off -> forall(k in h+1..h+4 ) (roster[t,k] = off));
+%constraint  forall (t in TEACHERs, h in 1..length(TIME)-4)  ( roster[t, h] = intermediate -> forall(k in h+1..h+4 ) (roster[t,k] = off));
+%constraint  forall (t in TEACHERs, h in 1..length(TIME)-4)  ( roster[t, h] = tbp -> forall(k in h+1..h+4 ) (roster[t,k] = off));
+%constraint  forall (t in TEACHERs, h in 1..length(TIME)-4)  ( roster[t, h] = monitor -> forall(k in h+1..h+4 ) (roster[t,k] = off));
 
-%constraint   forall ( t in TEACHERs) (disjunctive([h | h in TIME], [ shiftDuration[roster[t,h]] | h in TIME ])) ;               
+%constraint   forall ( t in TEACHERs) (disjunctive([h | h in TIME], [ 1 | h in TIME ])) ;               
 
 %no more than 2 shifts in a row
 %constraint forall (t in TEACHERs, h in 1..length(TIME)-2) (roster[t, h] in {intermediate,tbp,monitor} /\ roster[t, h+shiftDuration[roster[t,h]]-1] in {intermediate,tbp,monitor} ->  h+shiftDuration[roster[t,h]]+1 = off);
 
-constraint forall(t in TEACHERs, h in TIME) (sliding_sum(0,8,8,[shiftDuration[ roster[t,i]] | i in TIME where i in h..h+8]))  ;
 
+constraint forall(t in TEACHERs, h in 1..length(TIME)-8) (sliding_sum(0,8,8,[shiftDuration[ roster[t,i]] | i in TIME where i in h..h+8]))  ;
+constraint forall(t in TEACHERs, h in 1..length(TIME)-4) (sliding_sum(0,4,4,[shiftDuration[ roster[t,i]] | i in TIME where i in h..h+4]))  ;
 
 %max hours by day/week
 %constraint forall(t in TEACHERs, h in dayOfYear) (sum([ shiftDuration[roster[t, i]] | i in TIME where inDayOfYear[i] = h])  <= 16 );
 %constraint forall(t in TEACHERs, h in weekOfYear) (sum([shiftDuration[roster[t, i]] | i in TIME where inWeekOfYear[i] = h])  <= 52 );
 
-constraint forall(t in TEACHERs) ( sliding_sum(0, 16, if 48 <= length(TIME) then 48 else length(TIME) endif, [ shiftDuration[roster[t, i] ] | i in TIME ] ));
-constraint forall(t in TEACHERs) ( sliding_sum(0, 52, if 336 <= length(TIME) then 336 else length(TIME) endif, [ shiftDuration[roster[t, i] ] | i in TIME ] ));
+constraint forall(t in TEACHERs) ( sliding_sum(0, 16, length(TIME) , [ shiftDuration[roster[t, i] ] | i in TIME ] ));
+constraint forall(t in TEACHERs) ( sliding_sum(0, 52, length(TIME) , [ shiftDuration[roster[t, i] ] | i in TIME ] ));
 
 %if not needed -> force off 
 %constraint forall (s in SHIFTs, h in TIME) (minNeeded[s,h] = 0 -> forall(t in TEACHERs)(roster[t,h] != s));

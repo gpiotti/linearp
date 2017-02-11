@@ -4,9 +4,9 @@ import math
 myfile = open('datagen.dzn', 'w')
 WEEKSINYEAR = 52
 DAYSINYEAR = 365
-NUMTEACHERS = 10
-MAXTIME = 336
-PERC_AVAILABILITY= 80
+NUMTEACHERS = 2
+MAXTIME = 12
+PERC_AVAILABILITY= 100
 
 def getRandomBoolean():
     return randrange(100) < PERC_AVAILABILITY
