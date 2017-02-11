@@ -99,6 +99,10 @@ solve :: int_search (
         complete) 
     maximize obj;
 
-output ["TIME \t"] ++ ["\(TIME[i]) \t" | i in TIME] ++ ["\n"]  ++
-      [ if j==1 then teacherName[i] ++ "\t" else "" endif  ++ shiftName[fix(roster[i,j])] ++  if j==maxTime then "\n" else "\t" endif
-       | i in TEACHERs, j in TIME ]++ ["\nobj: \(obj) \nnumTeachers: \(numTeachers) "];
+%output ["TIME \t"] ++ ["\(TIME[i]) \t" | i in TIME] ++ ["\n"]  ++
+%      [ if j==1 then teacherName[i] ++ "\t" else "" endif  ++ shiftName[fix(roster[i,j])] ++  if j==maxTime then "\n" else "\t" endif
+%       | i in TEACHERs, j in TIME ];
+
+output ["\(TIME[i]);" | i in TIME] ++ ["\n"]  ++
+      [ if j==1 then teacherName[i] ++ ";" else "" endif  ++ shiftName[fix(roster[i,j])] ++  if j==maxTime then "\n" else ";" endif
+       | i in TEACHERs, j in TIME ];
