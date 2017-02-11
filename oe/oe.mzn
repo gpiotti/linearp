@@ -35,7 +35,7 @@ array[TEACHERs, TIME] of var SHIFT: roster;
 
 
 % min_needed quantity
-constraint forall(h in TIME) ( global_cardinality_low_up([roster[t, h] | t in TEACHERs], [intermediate, tbp, monitor], [0, 0, 0], [ minNeeded[intermediate,h], minNeeded[tbp,h],  minNeeded[monitor,h]] ) );
+constraint forall(h in TIME) ( global_cardinality_low_up([roster[t, h] | t in TEACHERs], [intermediate, tbp, monitor, off], [0, 0, 0, 0], [ minNeeded[intermediate,h], minNeeded[tbp,h],  minNeeded[monitor,h], numTeachers] ) );
 
 %other way of soft constraint -- also add "- obj2 " in the objective function 
 %array[1..3, TIME] of var 0..numTeachers: count ;
@@ -71,7 +71,7 @@ constraint forall(t in TEACHERs) ( sliding_sum(0, 16, if 48 <= length(TIME) then
 constraint forall(t in TEACHERs) ( sliding_sum(0, 52, if 336 <= length(TIME) then 336 else length(TIME) endif, [ shiftDuration[roster[t, i] ] | i in TIME ] ));
 
 %if not needed -> force off 
-constraint forall (s in SHIFTs, h in TIME) (minNeeded[s,h] = 0 -> forall(t in TEACHERs)(roster[t,h] = off));
+%constraint forall (s in SHIFTs, h in TIME) (minNeeded[s,h] = 0 -> forall(t in TEACHERs)(roster[t,h] != s));
 
 %calendar availability
 constraint forall(t in TEACHERs, h in TIME) (calendar[t,h] = false -> roster[t,h] = off);
@@ -82,17 +82,17 @@ var int: obj;
 constraint obj = sum([ ( - availability[roster[t,h],h]   ) | t in TEACHERs, h in TIME ]);
 
 
-solve maximize obj;
+%solve maximize obj;
 
-%solve :: int_search (
-%        [ roster[t,h] | t in TEACHERs, h in TIME]
+solve :: int_search (
+        [ roster[t,h] | t in TEACHERs, h in TIME]
         % ++ [stat[j,t] | j in 1..num_days, t in 1..3]
-%        , 
-%        impact, 
+        , 
+        smallest, 
         %anti_first_fail, 
-%        indomain_split,
-%        complete) 
-%    maximize obj;
+        indomain_reverse_split,
+        complete) 
+    maximize obj;
 
 output ["TIME \t"] ++ ["\(TIME[i]) \t" | i in TIME] ++ ["\n"]  ++
       [ if j==1 then teacherName[i] ++ "\t" else "" endif  ++ shiftName[fix(roster[i,j])] ++  if j==maxTime then "\n" else "\t" endif

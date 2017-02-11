@@ -4,7 +4,7 @@ import math
 myfile = open('datagen.dzn', 'w')
 WEEKSINYEAR = 52
 DAYSINYEAR = 365
-NUMTEACHERS = 50
+NUMTEACHERS = 10
 MAXTIME = 336
 PERC_AVAILABILITY= 80
 
