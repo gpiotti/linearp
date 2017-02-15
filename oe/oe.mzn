@@ -95,7 +95,7 @@ constraint forall(t in TEACHERs, h in 1..length(TIME)-4)
 %constraint forall(t in TEACHERs, h in weekOfYear) (sum([shiftDuration[roster[t, i]] | i in TIME where inWeekOfYear[i] = h])  <= 52 );
 
 constraint forall(t in TEACHERs) ( sliding_sum(0, 16, if 48 >= length(TIME) then length(TIME) else 48 endif , [ shiftDuration[roster[t, i] ] | i in TIME ] ));
-constraint forall(t in TEACHERs) ( sliding_sum(0, 52, if 48 >= length(TIME) then length(TIME)+1 else 48+1 endif , [previousWeekHours[t]] ++ [ shiftDuration[roster[t, i] ] | i in TIME ]  )); %+1 is for the previousWeekHours
+constraint forall(t in TEACHERs) ( sliding_sum(0, 52, if 336 >= length(TIME) then length(TIME)+1 else 336+1 endif , [previousWeekHours[t]] ++ [ shiftDuration[roster[t, i] ] | i in TIME ]  )); %+1 is for the previousWeekHours
 
 %if not needed -> force off 
 %constraint forall (s in SHIFTs, h in TIME) (minNeeded[s,h] = 0 -> forall(t in TEACHERs)(roster[t,h] != s));
