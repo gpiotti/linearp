@@ -3,8 +3,9 @@ import math
 myfile = open('datagen.dzn', 'w')
 WEEKSINYEAR = 52
 DAYSINYEAR = 365
-NUMTEACHERS = 10
-MAXTIME = 336
+NUMTEACHERS = 2
+MAXTIME = 10
+TIME0 = 4
 
 TIME_WITHIN_DAY = 48
 TIME_WITHIN_WEEK = 336
@@ -27,7 +28,12 @@ def writeList (list, startString, endString):
     myfile.write(",".join(temp))
     myfile.write("%s\n" % endString  )
 
-     
+def shiftFromInt(x):
+    return {
+        1: 'intermediate',
+        2: 'tbp',
+        3: 'monitor'
+    }[x]     
 
 #calendar
 calendar=[]
@@ -175,6 +181,34 @@ for s in range (0, NUMOFSHIFTS):
 
 writeList(availability, "availability = array2d(1..length(SHIFTs), TIME, [", "]);")
 
+
+#previousWeekHours
+previousWeekHours=[]
+
+for t in range(0, NUMTEACHERS):
+    previousWeekHours.append([t])
+    i = randint(0,13)    
+    previousWeekHours[t] = str(i*4)
+    
+temp = ",".join(previousWeekHours)
+myfile.write ("previousWeekHours = array1d(TEACHERs, [" + temp + "]);\n")
+
+#roster0
+roster0=[]
+
+for t in range (0, NUMTEACHERS):
+    roster0.append([t])
+    roster0[t] = []
+    shift = shiftFromInt(randint(1,3))
+    pos = randint(0,4)
+    for h in range(0, TIME0):
+        if h == pos:
+            roster0[t].append(shift)
+        else:
+            roster0[t].append("off")
+            
+
+writeList(roster0, "roster0 = array2d(TEACHERs, TIME0, [", "]);")
 
 myfile.close()
 
