@@ -1,11 +1,14 @@
-from random import randint
+from random import randint,randrange
+
 import math
 myfile = open('datagen.dzn', 'w')
 WEEKSINYEAR = 52
 DAYSINYEAR = 365
-NUMTEACHERS = 2
-MAXTIME = 10
+NUMTEACHERS = 10
+MAXTIME = 336
 TIME0 = 4
+PERC_AVAILABILITY= 80
+
 
 TIME_WITHIN_DAY = 48
 TIME_WITHIN_WEEK = 336
@@ -19,6 +22,9 @@ myfile.write("shiftDuration = [4,4,4,0];\n")
 myfile.write("shiftValue = [1,1,1,0];\n")
 myfile.write("numTeachers = %s;\n" % NUMTEACHERS)
 myfile.write('shiftName = ["INT","TBP","MON","off"];\n')
+
+def getRandomBoolean():
+    return randrange(100) < PERC_AVAILABILITY
 
 def writeList (list, startString, endString):
     temp = []
@@ -42,10 +48,10 @@ for t in range (0, NUMTEACHERS):
     calendar.append([t])
     calendar[t] = []
     for h in range(0, MAXTIME):
-        i = randint(0,1)
+        i = getRandomBoolean()
         if i == 0:
-            calendar[t].append("true")
-            #calendar[t].append("false")
+            #calendar[t].append("true")
+            calendar[t].append("false")
         else:
             calendar[t].append("true")
 myfile.write("calendar = array2d(TEACHERs, TIME, [")
@@ -139,12 +145,12 @@ for t in range (0, NUMTEACHERS):
         if s == NUMOFSHIFTS-1:
             i = 1
         else:
-            i = randint(0,1)
+            i = getRandomBoolean()
         if i == 1:
             teacherCanDoShift[t].append("true")
         else:
-            teacherCanDoShift[t].append("true")
-            #teacherCanDoShift[t].append("false")
+            #teacherCanDoShift[t].append("true")
+            teacherCanDoShift[t].append("false")
             
 writeList(teacherCanDoShift,
           "teacherCanDoShift = array2d(TEACHERs, 1..length(SHIFTs), [",
