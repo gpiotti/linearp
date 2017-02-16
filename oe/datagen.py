@@ -1,10 +1,10 @@
-from random import randint,randrange
+from random import randint,randrange,choice
 
 import math
 myfile = open('datagen.dzn', 'w')
 WEEKSINYEAR = 52
 DAYSINYEAR = 365
-NUMTEACHERS = 10
+NUMTEACHERS = 20
 MAXTIME = 336
 TIME0 = 4
 PERC_AVAILABILITY= 80
@@ -193,8 +193,8 @@ previousWeekHours=[]
 
 for t in range(0, NUMTEACHERS):
     previousWeekHours.append([t])
-    i = randint(0,13)    
-    previousWeekHours[t] = str(i*4)
+    i = choice([4,8,12,16,20,24,28])    
+    previousWeekHours[t] = str(i)
     
 temp = ",".join(previousWeekHours)
 myfile.write ("previousWeekHours = array1d(TEACHERs, [" + temp + "]);\n")
