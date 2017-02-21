@@ -1,14 +1,16 @@
 from random import randint,randrange,choice
-
+import csv
 import math
 myfile = open('datagen.dzn', 'w')
 WEEKSINYEAR = 52
 DAYSINYEAR = 365
-NUMTEACHERS = 20
+NUMTEACHERS = 549
 MAXTIME = 336
 TIME0 = 4
 PERC_AVAILABILITY= 80
 
+NUM_DAYS = 7
+NUM_WEEKS = 1
 
 TIME_WITHIN_DAY = 48
 TIME_WITHIN_WEEK = 336
@@ -18,6 +20,8 @@ NUMOFSHIFTS = len(shifts)
 
 
 myfile.write("maxTime = %s;\n" % MAXTIME)
+myfile.write("numDays = %s;\n" % NUM_DAYS)
+myfile.write("numWeeks = %s;\n" % NUM_WEEKS)
 myfile.write("shiftDuration = [4,4,4,0];\n")
 myfile.write("shiftValue = [1,1,1,0];\n")
 myfile.write("numTeachers = %s;\n" % NUMTEACHERS)
@@ -42,7 +46,7 @@ def shiftFromInt(x):
     }[x]     
 
 #calendar
-calendar=[]
+calendar = []
 
 for t in range (0, NUMTEACHERS):
     calendar.append([t])
@@ -54,11 +58,9 @@ for t in range (0, NUMTEACHERS):
             calendar[t].append("false")
         else:
             calendar[t].append("true")
-myfile.write("calendar = array2d(TEACHERs, TIME, [")
+            
 
-temp = []
-
-writeList(calendar, "", "]);")
+writeList(calendar, "calendar = array2d(TEACHERs, TIME, [", "]);")
 
 #teacherName
 teacherName = []
@@ -133,7 +135,21 @@ for item in range(1, len(weekOfYear)):
         myfile.write("%s, " % weekOfYear[item])
     else:
         myfile.write("%s ];\n" % weekOfYear[item])
-        
+
+
+# timeLabels     
+timeLabels = []
+
+  
+
+for i in range (1, MAXTIME+1):
+    timeLabels.append( str(i) )
+
+
+timeLabelsStr = (','.join("\"{0}\"".format(x) for x in timeLabels))
+
+myfile.write ("timeLabels =  [" + timeLabelsStr + "];\n")
+
 
 #teacherCanDoShift
 teacherCanDoShift = []
