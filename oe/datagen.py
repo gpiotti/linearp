@@ -4,10 +4,10 @@ import math
 myfile = open('datagen.dzn', 'w')
 WEEKSINYEAR = 52
 DAYSINYEAR = 365
-NUMTEACHERS = 549
+NUMTEACHERS = 5
 MAXTIME = 336
 TIME0 = 4
-PERC_AVAILABILITY= 80
+PERC_AVAILABILITY= 0
 
 NUM_DAYS = 7
 NUM_WEEKS = 1
@@ -215,22 +215,22 @@ for t in range(0, NUMTEACHERS):
 temp = ",".join(previousWeekHours)
 myfile.write ("previousWeekHours = array1d(TEACHERs, [" + temp + "]);\n")
 
-#roster0
-roster0=[]
+#lastWorkedHours
+lastWorkedHours=[]
 
 for t in range (0, NUMTEACHERS):
-    roster0.append([t])
-    roster0[t] = []
+    lastWorkedHours.append([t])
+    lastWorkedHours[t] = []
     shift = shiftFromInt(randint(1,3))
     pos = randint(0,4)
     for h in range(0, TIME0):
         if h == pos:
-            roster0[t].append(shift)
+            lastWorkedHours[t].append(shift)
         else:
-            roster0[t].append("off")
+            lastWorkedHours[t].append("off")
             
 
-writeList(roster0, "roster0 = array2d(TEACHERs, TIME0, [", "]);")
+writeList(lastWorkedHours, "lastWorkedHours = array2d(TEACHERs, TIME0, [", "]);")
 
 myfile.close()
 

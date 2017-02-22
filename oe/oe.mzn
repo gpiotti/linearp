@@ -38,7 +38,7 @@ array[SHIFT] of int: shiftValue;
 
 array[TEACHERs, TIME] of var SHIFT: roster;
 array[TEACHERs, TIME0] of SHIFT: lastWorkedHours;
-array[TEACHERs] of 0..numTeachers: previousWeekHours;
+array[TEACHERs] of 0..52: previousWeekHours;
 
 
 % min_needed quantity
@@ -110,7 +110,7 @@ constraint forall(t in TEACHERs) ( sliding_sum(0, 52, 336+1 , [previousWeekHours
 %constraint forall (s in SHIFTs, h in TIME where s != off)  (minNeeded[s,h] = 0 -> forall(t in TEACHERs)(roster[t,h] != s));
 
 %calendar availability
-constraint forall(t in TEACHERs, h in TIME where calendar[t,h] = false) (roster[t,h] = off);
+constraint forall(t in TEACHERs, h in TIME) (calendar[t,h] = false -> roster[t,h] = off);
 %skills
 constraint forall(t in TEACHERs, h in TIME, s in SHIFTs where teacherCanDoShift[t, s] = false) (roster[t,h] != s );
 
