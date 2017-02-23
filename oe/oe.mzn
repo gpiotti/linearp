@@ -40,6 +40,10 @@ array[TEACHERs, TIME] of var SHIFT: roster;
 array[TEACHERs, TIME0] of SHIFT: lastWorkedHours;
 array[TEACHERs] of 0..52: previousWeekHours;
 
+array[TEACHERs] of var int: stats;
+ 
+constraint forall(t in TEACHERs) (stats[t] = sum([shiftDuration[roster[t,h]] | h in TIME] ));
+constraint forall(t in TEACHERs) (previousWeekHours[t] + stats[t] <= 52) ;
 
 % min_needed quantity
 constraint forall(h in TIME) ( global_cardinality_low_up([roster[t, h] | t in TEACHERs], [intermediate, tbp, monitor, off], [0, 0, 0, 0], [ minNeeded[intermediate,h], minNeeded[tbp,h],  minNeeded[monitor,h], numTeachers] ) );
@@ -104,7 +108,7 @@ constraint forall(t in TEACHERs, h in 1..length(TIME)-4)
 %constraint forall(t in TEACHERs, h in weekOfYear) (sum([shiftDuration[roster[t, i]] | i in TIME where inWeekOfYear[i] = h])  <= 52 );
 
 constraint forall(t in TEACHERs) ( sliding_sum(0, 16, if 48 >= length(TIME) then length(TIME) else 48 endif , [ shiftDuration[roster[t, i] ] | i in TIME] ));
-constraint forall(t in TEACHERs) ( sliding_sum(0, 52, 336+1 , [previousWeekHours[t]] ++ [ shiftDuration[roster[t, i] ] | i in TIME ]  )); %+1 is for the previousWeekHours
+%constraint forall(t in TEACHERs) ( sliding_sum(0, 52, 336+1 , [previousWeekHours[t]] ++ [ shiftDuration[roster[t, i] ] | i in TIME ]  )); %+1 is for the previousWeekHours
 
 %if not needed -> force off 
 %constraint forall (s in SHIFTs, h in TIME where s != off)  (minNeeded[s,h] = 0 -> forall(t in TEACHERs)(roster[t,h] != s));
@@ -116,6 +120,7 @@ constraint forall(t in TEACHERs, h in TIME, s in SHIFTs where teacherCanDoShift[
 
 var int: obj;
 constraint obj = sum([ ( - availability[roster[t,h],h]   ) | t in TEACHERs, h in TIME ]);
+%constraint obj = sum([ ( shiftDuration[roster[t,h]]   ) | t in TEACHERs, h in TIME ]);
 
 
 %solve maximize obj;
@@ -139,6 +144,6 @@ output ["\(timeLabels[i]);" | i in TIME] ++ ["\n"]  ++
        | i in TEACHERs, j in TIME ] ++ ["\nTIME0\n"] ++
        ["\(TIME0[i]);" | i in TIME0] ++ ["\n"]  ++
        [ if j==1 then teacherName[i] ++ ";" else "" endif  ++ shiftName[fix(lastWorkedHours[i,j])] ++  if j==length(TIME0) then "\n" else ";" endif
-       | i in TEACHERs, j in TIME0 ];
+       | i in TEACHERs, j in TIME0 ] ++ ["\(stats)"];
        
     
