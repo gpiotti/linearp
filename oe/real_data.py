@@ -147,7 +147,7 @@ myfile.write ("inWeekOfYear = [" + inWeekOfYearStr + "];\n")
 # timeLabels     
 timeLabels = []
 
-csv_input = readCsv('inputs/timeLabels.csv')  
+csv_input = readCsv('inputs/timelabels.csv')  
 
 for row in csv_input:
     timeLabels.extend( row )
