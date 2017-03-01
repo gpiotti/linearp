@@ -5,7 +5,7 @@ from collections import OrderedDict
 myfile = open('datagen.dzn', 'w')
 WEEKSINYEAR = 52
 DAYSINYEAR = 365
-NUMTEACHERS = 544 
+NUMTEACHERS = 544
 MAXTIME = 336
 TIME0 = 4
 PERC_AVAILABILITY= 80

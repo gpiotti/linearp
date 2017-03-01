@@ -119,8 +119,8 @@ constraint forall(t in TEACHERs, h in TIME) (calendar[t,h] = false -> roster[t,h
 constraint forall(t in TEACHERs, h in TIME, s in SHIFTs where teacherCanDoShift[t, s] = false) (roster[t,h] != s );
 
 var int: obj;
-constraint obj = sum([ ( - availability[roster[t,h],h]   ) | t in TEACHERs, h in TIME ]);
-%constraint obj = sum([ ( shiftDuration[roster[t,h]]   ) | t in TEACHERs, h in TIME ]);
+%constraint obj = sum([ ( - availability[roster[t,h],h]   ) | t in TEACHERs, h in TIME ]);
+constraint obj = sum([ ( shiftDuration[roster[t,h]]   ) | t in TEACHERs, h in TIME ]);
 
 
 %solve maximize obj;
