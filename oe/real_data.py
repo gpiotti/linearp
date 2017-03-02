@@ -42,7 +42,8 @@ def shiftFromInt(x):
     return {
         1: 'intermediate',
         2: 'tbp',
-        3: 'monitor'
+        3: 'monitor',
+        4: 'off'
     }[x]     
 
 def readCsv(path):
@@ -211,6 +212,23 @@ for s in range (0, NUMOFSHIFTS):
 
 writeList(availability, "availability = array2d(1..length(SHIFTs), TIME, [", "]);")
 
+availabilityCSV = open('availability.csv', 'w')
+sname = ''
+textStr = 'shift,time,availability\n'
+for s in range(0, NUMOFSHIFTS-1):
+    if s == 0:
+        sname = 'intermediate'
+    elif s == 1:
+        sname = 'tbp'
+    elif s == 2:
+        sname = 'monitor'
+    for n in range (0, MAXTIME):
+        textStr = textStr + "%s,%s,%s\n" % (sname, timeLabels[n], availability[s][n])        
+availabilityCSV.write (textStr)        
+
+
+
+
 
 #previousWeekHours
 previousWeekHours=[]
@@ -232,9 +250,9 @@ csv_input = readCsv('inputs/lastWorkedHours.csv')
 for row in csv_input:
     if str(row[2]) == 'LP2 - Classic Intermediate':
         i = 'intermediate'
-    if str(row[2]) == 'LP2 - Classic True Beginner - Portuguese':
+    elif str(row[2]) == 'LP2 - Classic True Beginner - Portuguese':
         i = 'tbp'
-    if str(row[2]) == 'LP2 - Monitor':
+    elif str(row[2]) == 'LP2 - Monitor':
         i = 'monitor'
     else:
         i = 'off'
