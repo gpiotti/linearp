@@ -225,7 +225,7 @@ for s in range(0, NUMOFSHIFTS-1):
     for n in range (0, MAXTIME):
         textStr = textStr + "%s,%s,%s\n" % (sname, timeLabels[n], availability[s][n])        
 availabilityCSV.write (textStr)        
-
+availabilityCSV.close()
 
 
 
