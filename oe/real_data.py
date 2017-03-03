@@ -250,9 +250,9 @@ csv_input = readCsv('inputs/lastWorkedHours.csv')
 for row in csv_input:
     if str(row[2]) == 'LP2 - Classic Intermediate':
         i = 'intermediate'
-    if str(row[2]) == 'LP2 - Classic True Beginner - Portuguese':
+    elif str(row[2]) == 'LP2 - Classic True Beginner - Portuguese':
         i = 'tbp'
-    if str(row[2]) == 'LP2 - Monitor':
+    elif str(row[2]) == 'LP2 - Monitor':
         i = 'monitor'
     else:
         i = 'off'
