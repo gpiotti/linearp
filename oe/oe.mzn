@@ -78,11 +78,11 @@ constraint forall(h in TIME) ( global_cardinality_low_up([roster[t, h] | t in TE
 
 constraint forall(t in TEACHERs, h in 1..length(TIME)-9) 
 (sliding_sum(0,8,9,
-[ shiftDuration[lastWorkedHours[t,i]] | i in TIME0 where h  in {1,2,3} ] ++ [shiftDuration[ roster[t,j]] | j in h..h+9]  ));
+[ shiftDuration[lastWorkedHours[t,i]] | i in TIME0 where h = 1 ] ++ [shiftDuration[ roster[t,j]] | j in h..h+9]  ));
 
 constraint forall(t in TEACHERs, h in 1..length(TIME)-4) 
 (sliding_sum(0,4,4,
-[ shiftDuration[lastWorkedHours[t,i]] | i in TIME0 where h in {1,2,3} ] ++ [shiftDuration[ roster[t,j]] | j in h..h+4]  ));
+[ shiftDuration[lastWorkedHours[t,i]] | i in TIME0 where h = 1 ] ++ [shiftDuration[ roster[t,j]] | j in h..h+4]  ));
 
 %constraint diffn_nonstrict([h | t in TEACHERs, h in 1..length(TIME)],
 %  [t | t in TEACHERs, h in 1..length(TIME)],
@@ -119,8 +119,8 @@ constraint forall(t in TEACHERs, h in TIME) (calendar[t,h] = false -> roster[t,h
 constraint forall(t in TEACHERs, h in TIME, s in SHIFTs where teacherCanDoShift[t, s] = false) (roster[t,h] != s );
 
 var int: obj;
-constraint obj = sum([ ( - availability[roster[t,h],h]   ) | t in TEACHERs, h in TIME ]);
-%constraint obj = sum([ ( shiftDuration[roster[t,h]]   ) | t in TEACHERs, h in TIME ]);
+%constraint obj = sum([ ( - availability[roster[t,h],h]   ) | t in TEACHERs, h in TIME ]);
+constraint obj = sum([ ( shiftDuration[roster[t,h]]   ) | t in TEACHERs, h in TIME ]);
 
 
 %solve maximize obj;
