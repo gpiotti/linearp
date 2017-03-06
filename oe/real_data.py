@@ -195,39 +195,48 @@ minNeededStr = ",".join(minNeeded)
 myfile.write("minNeeded = array2d(SHIFTs, TIME, [" + minNeededStr + ']);\n')
 
 #availability
-availability = []
-for s in range (0, NUMOFSHIFTS):
-    availability.append([s])
-    availability[s] = []
-    for h in range(0, MAXTIME):
-        availability[s].append([h])
-        i = 0
-        for t in range(0, NUMTEACHERS):
-           if calendar[t][h] == "true" and teacherCanDoShift[t][s] == "true":
-               i = i+ 1
-        if s != NUMOFSHIFTS-1:
-            availability[s][h]= str(i)
-        else:
-            availability[s][h] = str(NUMTEACHERS*2) #the off shift has always max availability
+##availability = []
+##for s in range (0, NUMOFSHIFTS):
+##    availability.append([s])
+##    availability[s] = []
+##    for h in range(0, MAXTIME):
+##        availability[s].append([h])
+##        i = 0
+##        for t in range(0, NUMTEACHERS):
+##           if calendar[t][h] == "true" and teacherCanDoShift[t][s] == "true":
+##               i = i+ 1
+##        if s != NUMOFSHIFTS-1:
+##            availability[s][h]= str(i)
+##        else:
+##            availability[s][h] = str(NUMTEACHERS*2) #the off shift has always max availability
+##
+##writeList(availability, "availability = array2d(1..length(SHIFTs), TIME, [", "]);")
+##
+##availabilityCSV = open('availability.csv', 'w')
+##sname = ''
+##textStr = 'shift,time,availability\n'
+##for s in range(0, NUMOFSHIFTS-1):
+##    if s == 0:
+##        sname = 'intermediate'
+##    elif s == 1:
+##        sname = 'tbp'
+##    elif s == 2:
+##        sname = 'monitor'
+##    for n in range (0, MAXTIME):
+##        textStr = textStr + "%s,%s,%s\n" % (sname, timeLabels[n], availability[s][n])        
+##availabilityCSV.write (textStr)        
+##availabilityCSV.close()
 
-writeList(availability, "availability = array2d(1..length(SHIFTs), TIME, [", "]);")
+availability=[]
 
-availabilityCSV = open('availability.csv', 'w')
-sname = ''
-textStr = 'shift,time,availability\n'
-for s in range(0, NUMOFSHIFTS-1):
-    if s == 0:
-        sname = 'intermediate'
-    elif s == 1:
-        sname = 'tbp'
-    elif s == 2:
-        sname = 'monitor'
-    for n in range (0, MAXTIME):
-        textStr = textStr + "%s,%s,%s\n" % (sname, timeLabels[n], availability[s][n])        
-availabilityCSV.write (textStr)        
-availabilityCSV.close()
+csv_input = readCsv('availability.csv')
 
+for row in csv_input:
+    availability.append(row[2])
 
+availabilityStr = ",".join(availability)
+
+myfile.write ("availability = array2d(1..length(SHIFTs), TIME, [" + availabilityStr + "]);\n")
 
 
 #previousWeekHours
@@ -238,7 +247,6 @@ csv_input = readCsv('inputs/previousWeekHours.csv')
 for row in csv_input:
     previousWeekHours.append(row[1])
 
-previousWeekHoursStr = ",".join(previousWeekHours)
 
 previousWeekHoursStr = ",".join(previousWeekHours)
 myfile.write ("previousWeekHours = array1d(TEACHERs, [" + previousWeekHoursStr + "]);\n")
