@@ -17,10 +17,7 @@ int: numDays;
 int: numWeeks;
 set of int: TIME = 1..maxTime;
 set of int: TIME0 = 1..max(shiftDuration);
-array[TIME] of int: inDayOfYear;
-array[1..numDays] of int: dayOfYear;
-array[TIME] of int: inWeekOfYear;
-array[1..numWeeks] of int: weekOfYear;
+
 % shifts
 enum SHIFT = {intermediate,tbp,monitor,off};
 set of int: SHIFTs = 1..card(SHIFT);
@@ -41,6 +38,7 @@ array[TEACHERs, TIME0] of SHIFT: lastWorkedHours;
 array[TEACHERs] of 0..52: previousWeekHours;
 
 array[TEACHERs] of var int: stats;
+
  
 constraint forall(t in TEACHERs) (stats[t] = sum([shiftDuration[roster[t,h]] | h in TIME] ));
 constraint forall(t in TEACHERs) (previousWeekHours[t] + stats[t] <= 52) ;
@@ -119,8 +117,11 @@ constraint forall(t in TEACHERs, h in TIME) (calendar[t,h] = false -> roster[t,h
 constraint forall(t in TEACHERs, h in TIME, s in SHIFTs where teacherCanDoShift[t, s] = false) (roster[t,h] != s );
 
 var int: obj;
-constraint obj = sum([ ( - availability[roster[t,h],h]   ) | t in TEACHERs, h in TIME ]);
+constraint obj = sum([ (  availability[roster[t,h],h]   ) | t in TEACHERs, h in TIME] );
 %constraint obj = sum([ ( shiftDuration[roster[t,h]]   ) | t in TEACHERs, h in TIME ]);
+
+
+
 
 
 %solve maximize obj;
@@ -139,11 +140,11 @@ solve :: int_search (
 %      [ if j==1 then teacherName[i] ++ "\t" else "" endif  ++ shiftName[fix(roster[i,j])] ++  if j==maxTime then "\n" else "\t" endif
 %       | i in TEACHERs, j in TIME ];
 
-output ["\(timeLabels[i]);" | i in TIME] ++ ["\n"]  ++
-      [ if j==1 then teacherName[i] ++ ";" else "" endif  ++ shiftName[fix(roster[i,j])] ++  if j==maxTime then "\n" else ";" endif
-       | i in TEACHERs, j in TIME ] ++ ["\nTIME0\n"] ++
-       ["\(TIME0[i]);" | i in TIME0] ++ ["\n"]  ++
-       [ if j==1 then teacherName[i] ++ ";" else "" endif  ++ shiftName[fix(lastWorkedHours[i,j])] ++  if j==length(TIME0) then "\n" else ";" endif
-       | i in TEACHERs, j in TIME0 ] ++ ["\(stats)"];
-       
+%output ["\(timeLabels[i]);" | i in TIME] ++ ["\n"]  ++
+%      [ if j==1 then teacherName[i] ++ ";" else "" endif  ++ shiftName[fix(roster[i,j])] ++  if j==maxTime then "\n" else ";" endif
+%       | i in TEACHERs, j in TIME ] ++ ["\nTIME0\n"] ++
+%       ["\(TIME0[i]);" | i in TIME0] ++ ["\n"]  ++
+%       [ if j==1 then teacherName[i] ++ ";" else "" endif  ++ shiftName[fix(lastWorkedHours[i,j])] ++  if j==length(TIME0) then "\n" else ";" endif
+%       | i in TEACHERs, j in TIME0 ] ++ ["\(stats)"];
+output ["finished"]       
     
