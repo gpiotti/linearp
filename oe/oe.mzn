@@ -28,7 +28,7 @@ array[TEACHERs, 1..length(SHIFTs)] of bool: teacherCanDoShift;
 
 array[TEACHERs, TIME] of bool: calendar;
 array[SHIFTs, TIME] of int: minNeeded;
-array[SHIFTs, TIME] of int: availability;
+array[SHIFTs, TIME] of int: values;
 
 array[SHIFT] of int: shiftDuration;
 array[SHIFT] of int: shiftValue;
@@ -37,11 +37,12 @@ array[TEACHERs, TIME] of var SHIFT: roster;
 array[TEACHERs, TIME0] of SHIFT: lastWorkedHours;
 array[TEACHERs] of 0..52: previousWeekHours;
 
-array[TEACHERs] of var int: stats;
+array[TEACHERs] of var 0..52: stats;
 
  
 constraint forall(t in TEACHERs) (stats[t] = sum([shiftDuration[roster[t,h]] | h in TIME] ));
 constraint forall(t in TEACHERs) (previousWeekHours[t] + stats[t] <= 52) ;
+
 
 % min_needed quantity
 constraint forall(h in TIME) ( global_cardinality_low_up([roster[t, h] | t in TEACHERs], [intermediate, tbp, monitor, off], [0, 0, 0, 0], [ minNeeded[intermediate,h], minNeeded[tbp,h],  minNeeded[monitor,h], numTeachers] ) );
@@ -111,13 +112,13 @@ constraint forall(t in TEACHERs) ( sliding_sum(0, 16, if 48 >= length(TIME) then
 %if not needed -> force off 
 %constraint forall (s in SHIFTs, h in TIME where s != off)  (minNeeded[s,h] = 0 -> forall(t in TEACHERs)(roster[t,h] != s));
 
-%calendar availability
+%calendar values
 constraint forall(t in TEACHERs, h in TIME) (calendar[t,h] = false -> roster[t,h] = off);
 %skills
 constraint forall(t in TEACHERs, h in TIME, s in SHIFTs where teacherCanDoShift[t, s] = false) (roster[t,h] != s );
 
 var int: obj;
-constraint obj = sum([ (  availability[roster[t,h],h]   ) | t in TEACHERs, h in TIME] );
+constraint obj = sum([ (  values[roster[t,h],h]   ) | t in TEACHERs, h in TIME] );
 %constraint obj = sum([ ( shiftDuration[roster[t,h]]   ) | t in TEACHERs, h in TIME ]);
 
 
