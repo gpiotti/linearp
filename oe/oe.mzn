@@ -114,7 +114,7 @@ constraint forall(t in TEACHERs) ( sliding_sum(0, 16, if 48 >= length(TIME) then
 
 %calendar values
 constraint forall(t in TEACHERs, h in TIME) (calendar[t,h] = false -> roster[t,h] = off);
-constraint forall(h in TIME, s in SHIFT) (values[s,h] = 0 -> 
+constraint forall(h in TIME) (sum([values[s,h] | s in SHIFT]) = 0 -> 
 forall(t in TEACHERs) (roster[t,h] = off));
 %skills
 constraint forall(t in TEACHERs, h in TIME, s in SHIFTs where teacherCanDoShift[t, s] = false) (roster[t,h] != s );
