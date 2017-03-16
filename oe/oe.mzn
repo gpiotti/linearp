@@ -138,15 +138,13 @@ solve :: int_search (
         complete) 
     maximize obj;
 
-%output ["TIME \t"] ++ ["\(TIME[i]) \t" | i in TIME] ++ ["\n"]  ++
-%      [ if j==1 then teacherName[i] ++ "\t" else "" endif  ++ shiftName[fix(roster[i,j])] ++  if j==maxTime then "\n" else "\t" endif
-%       | i in TEACHERs, j in TIME ];
-
-output ["\(timeLabels[i]);" | i in TIME] ++ ["\n"]  ++
-      [ if j==1 then teacherName[i] ++ ";" else "" endif  ++ shiftName[fix(roster[i,j])] ++  if j==maxTime then "\n" else ";" endif
-       | i in TEACHERs, j in TIME ] ++ ["\nTIME0\n"] ++
-       ["\(TIME0[i]);" | i in TIME0] ++ ["\n"]  ++
-       [ if j==1 then teacherName[i] ++ ";" else "" endif  ++ shiftName[fix(lastWorkedHours[i,j])] ++  if j==length(TIME0) then "\n" else ";" endif
-       | i in TEACHERs, j in TIME0 ] ++ ["\(stats)"];
+%output ["\(timeLabels[i]);" | i in TIME] ++ ["\n"]  ++
+%      [ if j==1 then teacherName[i] ++ ";" else "" endif  ++ shiftName[fix(roster[i,j])] ++  if j==maxTime then "\n" else ";" endif
+%       | i in TEACHERs, j in TIME ] ++ ["\nTIME0\n"] ++
+%       ["\(TIME0[i]);" | i in TIME0] ++ ["\n"]  ++
+%       [ if j==1 then teacherName[i] ++ ";" else "" endif  ++ shiftName[fix(lastWorkedHours[i,j])] ++  if j==length(TIME0) then "\n" else ";" endif
+%       | i in TEACHERs, j in TIME0 ] ++ ["\(stats)"];
+       
+output [ timeLabels[j] ++ ";" ++  teacherName[i] ++ ";" ++ shiftName[fix(roster[i,j])] ++ "\n"  | i in TEACHERs, j in TIME ]  ;
 
     

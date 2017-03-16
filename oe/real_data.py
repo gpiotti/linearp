@@ -25,7 +25,8 @@ myfile.write("numDays = %s;\n" % NUM_DAYS)
 myfile.write("numWeeks = %s;\n" % NUM_WEEKS)
 myfile.write("shiftDuration = [4,4,4,0];\n")
 myfile.write("shiftValue = [1,1,1,0];\n")
-myfile.write('shiftName = ["INT","TBP","MON","off"];\n')
+#myfile.write('shiftName = ["INT","TBP","MON","off"];\n')
+myfile.write('shiftName = ["a3731000000573uAAA","a3731000000573zAAA","a3731000000573fAAA","off"];\n')
 
 def getRandomBoolean():
     return randrange(100) < PERC_AVAILABILITY
