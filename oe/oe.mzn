@@ -38,11 +38,11 @@ array[TEACHERs, TIME0] of SHIFT: lastWorkedHours;
 array[TEACHERs] of 0..52: previousWeekHours;
 
 array[TEACHERs] of var 0..52: stats;
-array[TEACHERs,0..numDays] of var 0..1: workedDay;
+%array[TEACHERs,0..numDays] of var 0..1: workedDay;
 
 %6 day break
-constraint forall(t in TEACHERs, d in 1..numDays) 
-  (workedDay[t,d] =  if sum([shiftDuration[roster[t,h]] | h in d+((d-1)*47)..d+((d-1)*47)+47]) > 0 then 1 else 0 endif);
+%constraint forall(t in TEACHERs, d in 1..numDays) 
+%  (workedDay[t,d] =  if sum([shiftDuration[roster[t,h]] | h in d+((d-1)*47)..d+((d-1)*47)+47]) > 0 then 1 else 0 endif);
   %1..48
   %49..96
   %97..144
@@ -50,11 +50,19 @@ constraint forall(t in TEACHERs, d in 1..numDays)
   %193..240
   %241..288
   %289..336
-constraint forall(t in TEACHERs)
-  (workedDay[t,0] = if sum([shiftDuration[lastWorkedHours[t,h]] | h in TIME0]) > 0 then 1 else 0 endif);
+%constraint forall(t in TEACHERs)
+%  (workedDay[t,0] = if sum([shiftDuration[lastWorkedHours[t,h]] | h in TIME0]) > 0 then 1 else 0 endif);
 
-  constraint forall(t in TEACHERs, d in 0..numDays-6) (sliding_sum(0,6,7,[workedDay[t,h] | h in d..d+6]));  
-  
+
+%constraint forall(t in TEACHERs, d in 0..numDays-6) (sliding_sum(0,6,7,[workedDay[t,h] | h in d..d+6]));
+
+%constraint forall(t in TEACHERs, d in 0..(numDays-6)) 
+%  ((workedDay[t,d] = 1 /\ workedDay[t,d+1] = 1 /\ workedDay[t,d+2] = 1
+%  /\ workedDay[t,d+3] = 1 /\ workedDay[t,d+4] = 1 /\ workedDay[t,d+5] = 1) -> workedDay[t,d+6] = 0  );     
+
+%constraint forall(t in TEACHERs, d in 0..numDays-6) ((workedDay[t,d] = 1 /\ workedDay[t,d+1] = 1) -> exists(h in d..numDays) (workedDay[t,h] = 0));
+%constraint forall(t in TEACHERs) (sliding_sum(0,6,7,[workedDay[t,h] | h in 0..numDays-1]));  
+     
 constraint forall(t in TEACHERs) (stats[t] = sum([shiftDuration[roster[t,h]] | h in TIME] ));
 constraint forall(t in TEACHERs) (previousWeekHours[t] + stats[t] <= 52) ;
 
