@@ -13,7 +13,7 @@ def readCsv(path):
 shiftNames = ["a3731000000573uAAA","a3731000000573zAAA","a3731000000573kAAA","off"]
 temp = OrderedDict()
 
-csv_input = readCsv('assignment.csv')
+csv_input = readCsv('raw_output.csv')
 #print (csv_input)
 for row in csv_input:
     if row[0] != '----------' and row[0] != '==========':

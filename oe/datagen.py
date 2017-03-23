@@ -4,10 +4,10 @@ import math
 myfile = open('datagen.dzn', 'w')
 WEEKSINYEAR = 52
 DAYSINYEAR = 365
-NUMTEACHERS = 5
+NUMTEACHERS = 1
 MAXTIME = 336
 TIME0 = 4
-PERC_AVAILABILITY= 0
+PERC_AVAILABILITY= 100
 
 NUM_DAYS = 7
 NUM_WEEKS = 1
@@ -72,69 +72,69 @@ for t in range (0, NUMTEACHERS):
     
 writeList(teacherName, "teacherName = [", "];")
      
-
-#inDayOfYear
-inDayOfYear = []
-
-for x in range (1, MAXTIME):
-    if len(inDayOfYear) >= MAXTIME:
-           break
-    for y in range(1, TIME_WITHIN_DAY+1):
-       inDayOfYear.append(x)
-       if len(inDayOfYear) >= MAXTIME:
-           break
-
-myfile.write("inDayOfYear = [")
-for item in range(0, len(inDayOfYear)):
-    if item != len(inDayOfYear)-1:
-        myfile.write("%s, " % inDayOfYear[item])
-    else:
-        myfile.write("%s ];\n" % inDayOfYear[item])
-
-#dayOfYear
-i = max(inDayOfYear) #takes max value from inDayOfYear
-dayOfYear = []
-
-for x in range (0, i+1):
-    dayOfYear.append(x)
-
-myfile.write("dayOfYear = [")
-for item in range(1, len(dayOfYear)):
-    if item != len(dayOfYear)-1:
-        myfile.write("%s, " % dayOfYear[item])
-    else:
-        myfile.write("%s ];\n" % dayOfYear[item])
-
-#inWeekOfYear
-inWeekOfYear = []
-for x in range (1, MAXTIME):
-    if len(inWeekOfYear) >= MAXTIME:
-           break
-    for y in range(1, TIME_WITHIN_WEEK+1):
-       inWeekOfYear.append(x)
-       if len(inWeekOfYear) >= MAXTIME:
-           break
-
-myfile.write("inWeekOfYear = [")
-for item in range(0, len(inWeekOfYear)):
-    if item != len(inWeekOfYear)-1:
-        myfile.write("%s, " % inWeekOfYear[item])
-    else:
-        myfile.write("%s ];\n" % inWeekOfYear[item])
-
-#weekOfYear
-i = max(inWeekOfYear) #takes max value from inWeekOfYear
-weekOfYear = []
-
-for x in range (0, i+1):
-    weekOfYear.append(x)
-
-myfile.write("weekOfYear = [")
-for item in range(1, len(weekOfYear)):
-    if item != len(weekOfYear)-1:
-        myfile.write("%s, " % weekOfYear[item])
-    else:
-        myfile.write("%s ];\n" % weekOfYear[item])
+##
+###inDayOfYear
+##inDayOfYear = []
+##
+##for x in range (1, MAXTIME):
+##    if len(inDayOfYear) >= MAXTIME:
+##           break
+##    for y in range(1, TIME_WITHIN_DAY+1):
+##       inDayOfYear.append(x)
+##       if len(inDayOfYear) >= MAXTIME:
+##           break
+##
+##myfile.write("inDayOfYear = [")
+##for item in range(0, len(inDayOfYear)):
+##    if item != len(inDayOfYear)-1:
+##        myfile.write("%s, " % inDayOfYear[item])
+##    else:
+##        myfile.write("%s ];\n" % inDayOfYear[item])
+##
+###dayOfYear
+##i = max(inDayOfYear) #takes max value from inDayOfYear
+##dayOfYear = []
+##
+##for x in range (0, i+1):
+##    dayOfYear.append(x)
+##
+##myfile.write("dayOfYear = [")
+##for item in range(1, len(dayOfYear)):
+##    if item != len(dayOfYear)-1:
+##        myfile.write("%s, " % dayOfYear[item])
+##    else:
+##        myfile.write("%s ];\n" % dayOfYear[item])
+##
+###inWeekOfYear
+##inWeekOfYear = []
+##for x in range (1, MAXTIME):
+##    if len(inWeekOfYear) >= MAXTIME:
+##           break
+##    for y in range(1, TIME_WITHIN_WEEK+1):
+##       inWeekOfYear.append(x)
+##       if len(inWeekOfYear) >= MAXTIME:
+##           break
+##
+##myfile.write("inWeekOfYear = [")
+##for item in range(0, len(inWeekOfYear)):
+##    if item != len(inWeekOfYear)-1:
+##        myfile.write("%s, " % inWeekOfYear[item])
+##    else:
+##        myfile.write("%s ];\n" % inWeekOfYear[item])
+##
+###weekOfYear
+##i = max(inWeekOfYear) #takes max value from inWeekOfYear
+##weekOfYear = []
+##
+##for x in range (0, i+1):
+##    weekOfYear.append(x)
+##
+##myfile.write("weekOfYear = [")
+##for item in range(1, len(weekOfYear)):
+##    if item != len(weekOfYear)-1:
+##        myfile.write("%s, " % weekOfYear[item])
+##    else:
+##        myfile.write("%s ];\n" % weekOfYear[item])
 
 
 # timeLabels     
@@ -197,11 +197,11 @@ for s in range (0, NUMOFSHIFTS):
            if calendar[t][h] == "true" and teacherCanDoShift[t][s] == "true":
                i = i+ 1
         if s != NUMOFSHIFTS-1:
-            availability[s][h]= str(i)
+            availability[s][h]= str(-i)
         else:
-            availability[s][h] = str(NUMTEACHERS*2) #the off shift has always max availability
+            availability[s][h] = str(-NUMTEACHERS*2) #the off shift has always max availability
 
-writeList(availability, "availability = array2d(1..length(SHIFTs), TIME, [", "]);")
+writeList(availability, "values = array2d(1..length(SHIFTs), TIME, [", "]);")
 
 
 #previousWeekHours

@@ -38,8 +38,23 @@ array[TEACHERs, TIME0] of SHIFT: lastWorkedHours;
 array[TEACHERs] of 0..52: previousWeekHours;
 
 array[TEACHERs] of var 0..52: stats;
+array[TEACHERs,0..numDays] of var 0..1: workedDay;
 
- 
+%6 day break
+constraint forall(t in TEACHERs, d in 1..numDays) 
+  (workedDay[t,d] =  if sum([shiftDuration[roster[t,h]] | h in d+((d-1)*47)..d+((d-1)*47)+47]) > 0 then 1 else 0 endif);
+  %1..48
+  %49..96
+  %97..144
+  %145..192
+  %193..240
+  %241..288
+  %289..336
+constraint forall(t in TEACHERs)
+  (workedDay[t,0] = if sum([shiftDuration[lastWorkedHours[t,h]] | h in TIME0]) > 0 then 1 else 0 endif);
+
+  constraint forall(t in TEACHERs, d in 0..numDays-6) (sliding_sum(0,6,7,[workedDay[t,h] | h in d..d+6]));  
+  
 constraint forall(t in TEACHERs) (stats[t] = sum([shiftDuration[roster[t,h]] | h in TIME] ));
 constraint forall(t in TEACHERs) (previousWeekHours[t] + stats[t] <= 52) ;
 
@@ -106,7 +121,9 @@ constraint forall(t in TEACHERs, h in 1..length(TIME)-4)
 %constraint forall(t in TEACHERs, h in dayOfYear) (sum([ shiftDuration[roster[t, i]] | i in TIME where inDayOfYear[i] = h])  <= 16 );
 %constraint forall(t in TEACHERs, h in weekOfYear) (sum([shiftDuration[roster[t, i]] | i in TIME where inWeekOfYear[i] = h])  <= 52 );
 
+%8 hours by day
 constraint forall(t in TEACHERs) ( sliding_sum(0, 16, if 48 >= length(TIME) then length(TIME) else 48 endif , [ shiftDuration[roster[t, i] ] | i in TIME] ));
+
 %constraint forall(t in TEACHERs) ( sliding_sum(0, 52, 336+1 , [previousWeekHours[t]] ++ [ shiftDuration[roster[t, i] ] | i in TIME ]  )); %+1 is for the previousWeekHours
 
 %if not needed -> force off 
@@ -146,5 +163,7 @@ solve :: int_search (
 %       | i in TEACHERs, j in TIME0 ] ++ ["\(stats)"];
        
 output [ timeLabels[j] ++ ";" ++  teacherName[i] ++ ";" ++ shiftName[fix(roster[i,j])] ++ "\n"  | i in TEACHERs, j in TIME ]  ;
+
+%output   [show(workedDay[1,d]) ++ "\t" | d in 0..numDays]    ;
 
     
